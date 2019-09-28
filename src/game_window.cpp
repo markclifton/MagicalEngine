@@ -90,8 +90,7 @@ namespace ME {
         glEnableVertexAttribArray(vcol_location);
         glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
                             sizeof(vertices[0]), (void*) (sizeof(float) * 2));
-        while (!glfwWindowShouldClose(m_window.get()))
-        {
+        while (!glfwWindowShouldClose(m_window.get())) {
             glm::mat4 mvp;
             glClear(GL_COLOR_BUFFER_BIT);
             mvp = glm::mat4(1.f);
