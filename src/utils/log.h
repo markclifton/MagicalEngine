@@ -61,7 +61,7 @@ namespace ME {
             };
 
             if(m_out && severity >= m_severity) (*m_out) << currentDateTime() << ": " << toString(severity) << ": " << error << std::endl;
-            if(severity == SEVERITY::FATAL) exit(1);
+            if(severity == SEVERITY::FATAL) system("pause"), exit(1);
         }
 
     private:

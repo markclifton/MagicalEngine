@@ -19,9 +19,9 @@ namespace ME { namespace Graphics {
     }
 
     Shader::Shader(const std::string &vs, const std::string &fs) {
-        auto vs_raw = loadFile(vs);
+        auto vs_raw = loadFile("res/shaders/" + vs + ".glsl");
         auto vs_cstr = vs_raw.c_str();
-        auto fs_raw = loadFile(fs);
+        auto fs_raw = loadFile("res/shaders/" + fs + ".glsl");
         auto fs_cstr = fs_raw.c_str();
 
         GLint Compiled;

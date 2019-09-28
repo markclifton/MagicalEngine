@@ -1,7 +1,7 @@
-#include "graphics/game_window.h"
+#include "game/instance.h"
+#include "utils/log.h"
 
-int main(int argc, char* argv[]) {    
-    auto gameWindow = ME::Graphics::GameWindow();
-    gameWindow.run();
+int main(int argc, char* argv[]) {
+    ME::Game::Instance().run();
     return 0;
 }

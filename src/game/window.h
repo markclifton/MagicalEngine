@@ -5,8 +5,8 @@
 #include "external/glad.h"
 #include <GLFW/glfw3.h>
 
-namespace ME { namespace Graphics {
-    class GameWindow {
+namespace ME { namespace Game {
+    class Window {
         struct windowDeleter {
             void operator()(GLFWwindow* ptr) {
                 glfwTerminate();
@@ -14,12 +14,11 @@ namespace ME { namespace Graphics {
             }
         };
     public:
-        GameWindow();
-        ~GameWindow();
+        Window();
+        ~Window();
 
         bool shouldClose();
-        void refresh();
-        void run();
+        void update();
 
     private:
         std::unique_ptr<GLFWwindow, windowDeleter> m_window;
