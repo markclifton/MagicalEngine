@@ -11,17 +11,19 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BUILD_DIR}/)
 
 project(MagicalEngine)
 
-file(GLOB SRC_FILES
-    src/**.cpp
-    src/**/*.cpp
+file(GLOB_RECURSE SRC_FILES
+    src/
+    src/*.cpp
 )
 
-file(GLOB HEADER_FILES
-    src/**/*.h 
-    src/**/**/*.h 
+file(GLOB_RECURSE HEADER_FILES
+    src/
+    src/*.h
+    src/*.hpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/src/)
+include_directories(${CMAKE_SOURCE_DIR}/src/external)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEADER_FILES})
 
