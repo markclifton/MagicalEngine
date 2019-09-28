@@ -20,4 +20,9 @@ namespace ME { namespace Graphics {
         bind();
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, type);
     }
+
+    void IndexBuffer::buffer_sub_data(GLintptr offset, size_t size, void* data) {
+        bind();
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
+    }
 }}

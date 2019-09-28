@@ -1,11 +1,14 @@
 #pragma once 
 
-#include "ecs/ecs.h"
+#include "ecs.h"
 
 #include "glm/glm.hpp"
 #include "ecs/components/renderable_component.h"
+#include "ecs/components/render_type_components.h"
 
-inline void create_triangle(ECS::World* world, glm::vec3 position) {
+//TODO: Stop manually xforming vertices, use the xforms
+
+inline ECS::Entity* create_triangle(ECS::World* world, glm::vec3 position) {
     auto entity = world->create();
 
     VerticesComponent vertices ({
@@ -21,9 +24,11 @@ inline void create_triangle(ECS::World* world, glm::vec3 position) {
         {0}
     });
     entity->assign<IndicesComponent>(indices);
+
+    return entity;
 }
 
-inline void create_square(ECS::World* world, glm::vec3 position, glm::vec2 size = {.25f, .25f}) {
+inline ECS::Entity* create_square(ECS::World* world, glm::vec3 position, glm::vec2 size = {.25f, .25f}) {
     auto entity = world->create();
 
     size *= .5f;
@@ -44,4 +49,6 @@ inline void create_square(ECS::World* world, glm::vec3 position, glm::vec2 size 
         {3}
     });
     entity->assign<IndicesComponent>(indices);
+
+    return entity;
 }

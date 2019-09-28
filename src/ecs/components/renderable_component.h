@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ecs/ecs.h"
+#include "ecs.h"
 
 #include "glm/glm.hpp"
 
@@ -17,7 +17,13 @@ struct VerticesComponent {
 };
 
 struct IndicesComponent {
-    IndicesComponent(std::vector<uint32_t> v) : indices(v) {}
+    IndicesComponent(std::vector<uint32_t> i) : indices(i) {}
     IndicesComponent() {}
     std::vector<uint32_t> indices {};
+};
+
+struct XformComponent {
+    XformComponent() {}
+    XformComponent(glm::mat4 x) : xform(x) {}
+    glm::mat4 xform;
 };

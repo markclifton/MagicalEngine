@@ -28,4 +28,9 @@ namespace ME { namespace Graphics {
             bind();
             glBufferData(GL_ARRAY_BUFFER, size, verts, drawType);
         }
+
+        void VertexBuffer::buffer_sub_data(GLintptr offset, size_t size, void* data) {
+            bind();
+            glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+        }
 }}
