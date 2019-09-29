@@ -2,8 +2,7 @@
 
 #include <memory>
 
-#include "graphics/buffers/index_buffer.h"
-#include "graphics/buffers/vertex_buffer.h"
+#include "graphics/buffer.h"
 
 struct RenderComponent {
 };

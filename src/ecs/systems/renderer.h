@@ -3,8 +3,7 @@
 #include "ecs/components/renderable_component.h"
 #include "ecs/components/render_type_components.h"
 #include "ecs.h"
-#include "graphics/buffers/index_buffer.h"
-#include "graphics/buffers/vertex_buffer.h"
+#include "graphics/buffer.h"
 #include "graphics/shaders/shader.h"
 
 class RenderSystem : public ECS::EntitySystem {

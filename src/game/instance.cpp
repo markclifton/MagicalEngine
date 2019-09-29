@@ -26,44 +26,28 @@ namespace ME { namespace Game {
         auto world = ECS::World::createWorld();
         world->registerSystem(renderSystem);
         world->registerSystem(batchSystem);
-        //world->registerSystem(instancedSystem);
+        world->registerSystem(instancedSystem);
 
-        auto e = create_cube(world, glm::vec3(-.5, -.75f, -2.5f));
-        e->assign<RenderComponent>();
-        
-        auto step = .5;
-
-        auto instancedEntity = create_square(world, glm::vec3(), {step*.95, step*.95});
-        instancedEntity->assign<InstancedRenderComponent>(instancedEntity);
-        
-        auto entity = world->create();
-        entity->assign<InstancedComponent>(instancedEntity);
-        entity->assign<XformComponent>( glm::translate(glm::mat4(1.f), glm::vec3(0, 0, 0)) );
-
-        for(float x = -2.f; x < 2; x+=step){
-            auto batchE = create_square(world, glm::vec3(x, 0.f, 0.f), {step*.95, step*.95});
+        for(float x = -2.f; x < 2; x+=1){
+            auto batchE = create_cube(world, glm::vec3(x, -.75f, -2.5f));
             batchE->assign<BatchRenderComponent>( batchSystem->get_batch() );
-            batchSystem->m_batches[0].numVertices += 4;
-            batchSystem->m_batches[0].numIndices += 6;
+            batchSystem->m_batches[0].numVertices += 8;
+            batchSystem->m_batches[0].numIndices += 36;
         }
-
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
-        glEnable(GL_CULL_FACE);
 
         ME::Camera::Camera3D::instance().SetViewport(0, 0, 640, 480);
         m_window->registerHandler(&ME::Camera::Camera3D::instance());
 
-        glfwSwapInterval(0);
-   //     ME::Timer t;
         while(!m_window->shouldClose()) {
             update();
             world->tick(glfwGetTime());
-     //       ME::Log<ME::DEBUG>() << ("Frame time: " + std::to_string(t.reset()));
         }
     }
 
     void Instance::load() {
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        glEnable(GL_CULL_FACE);
     }
 
     void Instance::update() {

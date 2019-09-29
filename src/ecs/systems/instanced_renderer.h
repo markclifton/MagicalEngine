@@ -7,9 +7,15 @@
 
 #include "ecs/components/renderable_component.h"
 #include "ecs/components/render_type_components.h"
-#include "graphics/buffers/index_buffer.h"
-#include "graphics/buffers/vertex_buffer.h"
+#include "graphics/buffer.h"
 #include "graphics/shaders/shader.h"
+
+//Example usage:
+//  auto instancedEntity = create_square(world, glm::vec3(), {step*.95, step*.95});
+//  instancedEntity->assign<InstancedRenderComponent>(instancedEntity);
+//  auto entity = world->create();
+//  entity->assign<InstancedComponent>(instancedEntity);
+//  entity->assign<XformComponent>( glm::translate(glm::mat4(1.f), glm::vec3(0, 0, 0)) );
 
 class InstancedRenderSystem : public ECS::EntitySystem {
     std::shared_ptr<ME::Graphics::Shader> shader {ME::Graphics::load_shader("vertex", "fragment")};
