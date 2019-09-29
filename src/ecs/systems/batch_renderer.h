@@ -74,6 +74,10 @@ public:
                 cur_batch.second.edited = false;
             }
 
+            glm::mat4 p, v;
+            ME::Camera::Camera3D::instance().GetMatricies(p, v);
+            shader->set_uniform("projection", p*v);
+
             cur_batch.second.ibo.bind();
             glDrawElements(GL_TRIANGLES, cur_batch.second.numIndices, GL_UNSIGNED_INT, nullptr);
         }

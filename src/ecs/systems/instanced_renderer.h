@@ -81,6 +81,10 @@ public:
                 irc.get().edited = false;
             }
 
+            glm::mat4 p, v;
+            ME::Camera::Camera3D::instance().GetMatricies(p, v);
+            shader->set_uniform("projection", p*v);
+
             ibo->bind();
             glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, transforms.size());
         });
