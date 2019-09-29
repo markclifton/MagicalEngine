@@ -9,6 +9,7 @@ namespace ME { namespace Graphics {
         ~IndexBuffer();
         
         void bind();
+        void unbind();
         void buffer(size_t size, void* indices, int type = GL_STATIC_DRAW);
         void buffer_sub_data(GLintptr offset, size_t size, void* data);
 

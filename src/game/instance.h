@@ -3,9 +3,10 @@
 #include <memory>
 
 #include "window.h"
+#include "utils/non_copyable.h"
 
 namespace ME { namespace Game {
-    class Instance {
+    class Instance : NonCopyable {
     public:
         Instance();
 

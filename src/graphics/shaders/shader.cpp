@@ -73,6 +73,10 @@ namespace ME { namespace Graphics {
         glUseProgram(m_program);
     }
 
+    void Shader::unbind() {
+        glUseProgram(0);
+    }
+
     int Shader::get_attrib_location(const std::string &attribName) {
         bind();
         return glGetAttribLocation(m_program, attribName.c_str());

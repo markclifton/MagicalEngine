@@ -8,6 +8,7 @@ namespace ME { namespace Graphics {
         VertexBuffer::VertexBuffer() {
             glGenBuffers(1, &m_vbo);
             if(m_vbo == 0) Log<ME::FATAL>() << "Failed to allocate vbo";
+            Log<ME::DEBUG>() << "VBO Created: " + std::to_string(m_vbo);
         }
 
         VertexBuffer::~VertexBuffer() {
@@ -16,21 +17,19 @@ namespace ME { namespace Graphics {
 
         void VertexBuffer::bind() {
             glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        }
 
-            //TODO: Move to better location
-            glEnableVertexAttribArray(0);
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*) 0);
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*) (sizeof(float) * 3));
+        void VertexBuffer::unbind() {
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
 
         void VertexBuffer::buffer(size_t size, void* verts, int drawType) {
-            bind();
+            glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
             glBufferData(GL_ARRAY_BUFFER, size, verts, drawType);
         }
 
         void VertexBuffer::buffer_sub_data(GLintptr offset, size_t size, void* data) {
-            bind();
+            glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
             glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
         }
 }}

@@ -6,10 +6,8 @@ layout (location = 2) in mat4 vs_xform;
 
 out vec3 fs_color;
 
-uniform mat4 projection;
-uniform mat4 transformation;
-
-void main() {
-    gl_Position = /*projection * transformation */vs_xform * vec4(vs_position, 1);
+void main()
+{
+    gl_Position = vs_xform * vec4(vs_position, 1);
 	fs_color = vs_color;
 }

@@ -1,5 +1,10 @@
 #pragma once
 
+#include <memory>
+
+#include "graphics/buffers/index_buffer.h"
+#include "graphics/buffers/vertex_buffer.h"
+
 struct RenderComponent {
 };
 
@@ -9,5 +14,19 @@ struct BatchRenderComponent {
     int batch_id;
 };
 
-struct IndexedRenderComponent {
+struct InstancedComponent {
+    InstancedComponent() {}
+    InstancedComponent(ECS::Entity* e) : base(e) {}
+    ECS::Entity* base {nullptr};
+};
+
+struct InstancedRenderComponent {
+    InstancedRenderComponent() {}
+    InstancedRenderComponent(ECS::Entity* base) : base(base) {}
+    ECS::Entity* base {nullptr};
+    ME::Graphics::IndexBuffer* ibo {nullptr};
+    ME::Graphics::VertexBuffer* vbo {nullptr};
+    ME::Graphics::VertexBuffer* mbo {nullptr};
+    std::vector<glm::mat4> transforms;
+    bool edited {true};
 };

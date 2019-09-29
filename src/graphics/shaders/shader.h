@@ -15,6 +15,8 @@ namespace ME { namespace Graphics {
         ~Shader();
 
         void bind();
+        void unbind();
+
         int get_attrib_location(const std::string &attribName);
         int get_uniform_location(const std::string &uniformName);
 
