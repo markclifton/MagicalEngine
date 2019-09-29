@@ -11,6 +11,9 @@
 #include "utils/log.h"
 #include "utils/timer.h"
 
+//TEST
+#include "graphics/textures/texture.h"
+
 namespace ME { namespace Game {
     Instance::Instance() 
     : m_window(std::make_unique<Window>())
@@ -18,15 +21,21 @@ namespace ME { namespace Game {
 
     void Instance::run() {
         load();
+        
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         auto renderSystem = new RenderSystem();
         auto batchSystem = new BatchRenderSystem();
         auto instancedSystem = new InstancedRenderSystem();
 
         auto world = ECS::World::createWorld();
-        world->registerSystem(renderSystem);
         world->registerSystem(batchSystem);
         world->registerSystem(instancedSystem);
+        world->registerSystem(renderSystem);
+
+        auto ee = create_square(world, glm::vec3(), {1, 1});
+        ee->assign<RenderComponent>();
 
         for(float x = -2.f; x < 2; x+=1){
             auto batchE = create_cube(world, glm::vec3(x, -.75f, -2.5f));
@@ -34,6 +43,9 @@ namespace ME { namespace Game {
             batchSystem->m_batches[0].numVertices += 8;
             batchSystem->m_batches[0].numIndices += 36;
         }
+
+        ME::Graphics::Texture t("res/textures/attack_sword.png");
+        t.bind();
 
         ME::Camera::Camera3D::instance().SetViewport(0, 0, 640, 480);
         m_window->registerHandler(&ME::Camera::Camera3D::instance());

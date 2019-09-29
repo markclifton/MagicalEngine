@@ -18,7 +18,6 @@ public:
 
     void tick(ECS::World* world, float delta) override {
         shader->bind();
-        
         world->each<RenderComponent>([&](ECS::Entity* ent, ECS::ComponentHandle<RenderComponent>) {
             auto& verts = ent->get<VerticesComponent>().get().verts;
             vbo.buffer(sizeof(VertexComponent) * verts.size(), &verts[0]);
@@ -32,13 +31,15 @@ public:
             glEnableVertexAttribArray(3);
             glEnableVertexAttribArray(4);
             glEnableVertexAttribArray(5);
+            glEnableVertexAttribArray(6);
             
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)offsetof(VertexComponent, VertexComponent::position));
             glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)offsetof(VertexComponent, VertexComponent::color));
-            glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)(offsetof(VertexComponent, VertexComponent::xform) + 0 * sizeof(glm::vec4)));
-            glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)(offsetof(VertexComponent, VertexComponent::xform) + 1 * sizeof(glm::vec4)));
-            glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)(offsetof(VertexComponent, VertexComponent::xform) + 2 * sizeof(glm::vec4)));
-            glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)(offsetof(VertexComponent, VertexComponent::xform) + 3 * sizeof(glm::vec4)));
+            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)offsetof(VertexComponent, VertexComponent::uv));
+            glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)(offsetof(VertexComponent, VertexComponent::xform) + 0 * sizeof(glm::vec4)));
+            glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)(offsetof(VertexComponent, VertexComponent::xform) + 1 * sizeof(glm::vec4)));
+            glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)(offsetof(VertexComponent, VertexComponent::xform) + 2 * sizeof(glm::vec4)));
+            glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)(offsetof(VertexComponent, VertexComponent::xform) + 3 * sizeof(glm::vec4)));
             
             glm::mat4 p, v;
             ME::Camera::Camera3D::instance().GetMatricies(p, v);

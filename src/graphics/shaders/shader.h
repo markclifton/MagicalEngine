@@ -3,8 +3,8 @@
 #include <memory>
 #include <string>
 
-#include "external/glad.h"
-#include "external/glm/glm.hpp"
+#include "glad.h"
+#include "glm/glm.hpp"
 
 namespace ME { namespace Graphics {
     class  Shader

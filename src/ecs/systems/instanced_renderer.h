@@ -55,8 +55,10 @@ public:
                 vbo->buffer(sizeof(VertexComponent) * verts.size(), &verts[0]);
                 glEnableVertexAttribArray(0);
                 glEnableVertexAttribArray(1);
+                glEnableVertexAttribArray(2);
                 glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)offsetof(VertexComponent, VertexComponent::position));
                 glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)offsetof(VertexComponent, VertexComponent::color));
+                glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)offsetof(VertexComponent, VertexComponent::uv));
                 vbo->unbind();
                 
                 ibo->buffer(sizeof(int32_t) * indices.size(), &indices[0]);
@@ -70,18 +72,18 @@ public:
                 });
 
                 mbo->buffer(transforms.size() * static_cast<long>(sizeof(glm::mat4)), &transforms[0], GL_STATIC_DRAW);
-                glEnableVertexAttribArray(2);
                 glEnableVertexAttribArray(3);
                 glEnableVertexAttribArray(4);
                 glEnableVertexAttribArray(5);
-                glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(0 * sizeof(glm::vec4)));
-                glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(1 * sizeof(glm::vec4)));
-                glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
-                glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
-                glVertexAttribDivisor(2, 1);
+                glEnableVertexAttribArray(6);
+                glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(0 * sizeof(glm::vec4)));
+                glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(1 * sizeof(glm::vec4)));
+                glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
+                glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
                 glVertexAttribDivisor(3, 1);
                 glVertexAttribDivisor(4, 1);
                 glVertexAttribDivisor(5, 1);
+                glVertexAttribDivisor(6, 1);
                 mbo->unbind();
 
                 irc.get().edited = false;

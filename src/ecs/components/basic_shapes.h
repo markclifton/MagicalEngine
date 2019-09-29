@@ -31,10 +31,10 @@ inline ECS::Entity* create_square(ECS::World* world, glm::vec3 position, glm::ve
 
     size *= .5f;
     VerticesComponent vertices ({
-        {glm::vec3(-size.x, -size.y, -1.f), glm::vec3(1.f, 0.f, 0.f), glm::translate(glm::mat4(1.f), position)},
-        {glm::vec3(size.x, -size.y, -1.f), glm::vec3(0.f, 1.f, 0.f), glm::translate(glm::mat4(1.f), position)},
-        {glm::vec3(size.x, size.y, -1.f), glm::vec3(0.f, 0.f, 1.f), glm::translate(glm::mat4(1.f), position)},
-        {glm::vec3(-size.x, size.y, -1.f), glm::vec3(1.f, 0.f, 1.f), glm::translate(glm::mat4(1.f), position)}
+        {glm::vec3(-size.x, -size.y, -1.f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0,1,0),glm::translate(glm::mat4(1.f), position)},
+        {glm::vec3(size.x, -size.y, -1.f), glm::vec3(0.f, 1.f, 0.f), glm::vec3(1,1,0),glm::translate(glm::mat4(1.f), position)},
+        {glm::vec3(size.x, size.y, -1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(1,0,0),glm::translate(glm::mat4(1.f), position)},
+        {glm::vec3(-size.x, size.y, -1.f), glm::vec3(1.f, 0.f, 1.f), glm::vec3(0,0,0), glm::translate(glm::mat4(1.f), position)}
     });
     entity->assign<VerticesComponent>(vertices);
 
