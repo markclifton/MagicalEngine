@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
 #ifdef _WIN32
-    FreeConsole();
+    //FreeConsole();
 #endif
     ME::Game::Instance().run();
     return 0;

@@ -28,7 +28,7 @@ namespace {
 namespace ME { namespace Game {
     Window::Window() {
         if (!glfwInit()) Log<FATAL>() << "Failed to init glfw";
-        m_window.reset(glfwCreateWindow(640, 480, "Hello World", NULL, NULL));
+        m_window.reset(glfwCreateWindow(1280, 720, "Hello World", nullptr, nullptr));
         if (!m_window) {
             glfwTerminate();
             Log<FATAL>() << "Failed to create the window";

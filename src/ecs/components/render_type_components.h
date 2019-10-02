@@ -4,8 +4,7 @@
 
 #include "graphics/buffer.h"
 
-struct RenderComponent {
-};
+struct RenderComponent {};
 
 struct BatchRenderComponent {
     BatchRenderComponent() {}
@@ -28,4 +27,7 @@ struct InstancedRenderComponent {
     ME::Graphics::VertexBuffer* mbo {nullptr};
     std::vector<glm::mat4> transforms;
     bool edited {true};
+};
+
+struct VisibleComponent {
 };

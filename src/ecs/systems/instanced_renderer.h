@@ -30,7 +30,11 @@ public:
         shader->bind();
         
         std::set<ECS::Entity*> completed;
-        world->each<InstancedRenderComponent>([&](ECS::Entity* e1, ECS::ComponentHandle<InstancedRenderComponent> irc) {
+        world->each<InstancedRenderComponent, VerticesComponent, IndicesComponent>([&](
+            ECS::Entity* e1, 
+            ECS::ComponentHandle<InstancedRenderComponent> irc, 
+            ECS::ComponentHandle<VerticesComponent> vertComp, 
+            ECS::ComponentHandle<IndicesComponent> indComp) {
             auto currentTarget = irc.get().base;
             if(completed.find(irc.get().base) != completed.end()) return;
             completed.insert(currentTarget);
@@ -47,9 +51,8 @@ public:
             }
 
             auto& transforms = irc.get().transforms;
-
-            auto& verts = e1->get<VerticesComponent>().get().verts;
-            auto& indices = e1->get<IndicesComponent>().get().indices;
+            auto& verts = vertComp.get().verts;
+            auto& indices = indComp.get().indices;
 
             if(irc.get().edited) {
                 vbo->buffer(sizeof(VertexComponent) * verts.size(), &verts[0]);
@@ -65,10 +68,15 @@ public:
                 ibo->unbind();
 
                 transforms.clear();
-                world->each<InstancedComponent>([&](ECS::Entity* e2, ECS::ComponentHandle<InstancedComponent> ic) {
+                world->each<InstancedComponent, VisibleComponent, XformComponent>([&](
+                    ECS::Entity* e2, 
+                    ECS::ComponentHandle<InstancedComponent> ic, 
+                    ECS::ComponentHandle<VisibleComponent>, 
+                    ECS::ComponentHandle<XformComponent> xform ) {
+
                     auto newTarget = ic.get().base;
                     if(newTarget != currentTarget) return;
-                    transforms.push_back(e2->get<XformComponent>().get().xform);
+                    transforms.push_back(xform.get().xform);
                 });
 
                 mbo->buffer(transforms.size() * static_cast<long>(sizeof(glm::mat4)), &transforms[0], GL_STATIC_DRAW);

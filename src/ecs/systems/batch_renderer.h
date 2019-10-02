@@ -13,6 +13,7 @@ struct BatchEntity {
     ME::Graphics::VertexBuffer vbo;
     uint32_t numVertices {0};
     uint32_t numIndices {0};
+    uint32_t totalBuffered {0};
     bool edited {true};
 };
 
@@ -58,20 +59,18 @@ public:
 
                 int currentVerts = 0;
                 std::vector<uint32_t> finalIndices;
-                world->each<BatchRenderComponent>([&](ECS::Entity* ent, ECS::ComponentHandle<BatchRenderComponent> component) {
+                world->each<BatchRenderComponent, VisibleComponent, VerticesComponent, IndicesComponent>([&](
+                    ECS::Entity* ent, ECS::ComponentHandle<BatchRenderComponent> component, ECS::ComponentHandle<VisibleComponent>, ECS::ComponentHandle<VerticesComponent> verts, ECS::ComponentHandle<IndicesComponent> indices) {
                     if(component.get().batch_id != cur_batch.first) return;
 
-                    auto& verts = ent->get<VerticesComponent>().get().verts;
-                    auto& indices = ent->get<IndicesComponent>().get().indices;
+                    cur_batch.second.vbo.buffer_sub_data(sizeof(VertexComponent) * currentVerts , sizeof(VertexComponent) * verts.get().verts.size(), &verts.get().verts[0]);
 
-                    cur_batch.second.vbo.buffer_sub_data(sizeof(VertexComponent) * currentVerts , sizeof(VertexComponent) * verts.size(), &verts[0]);
-
-                    for(auto index : indices) finalIndices.push_back(index + currentVerts);
-                    currentVerts += verts.size();
+                    for(auto index : indices.get().indices) finalIndices.push_back(index + currentVerts);
+                    currentVerts += verts.get().verts.size();
                 });
 
                 cur_batch.second.ibo.buffer(sizeof(int32_t) * finalIndices.size(), &finalIndices[0]);
-                cur_batch.second.ibo.unbind();
+                cur_batch.second.totalBuffered = finalIndices.size();
                 cur_batch.second.edited = false;
             }
 
@@ -80,7 +79,7 @@ public:
             shader->set_uniform("projection", p*v);
 
             cur_batch.second.ibo.bind();
-            glDrawElements(GL_TRIANGLES, cur_batch.second.numIndices, GL_UNSIGNED_INT, nullptr);
+            glDrawElements(GL_TRIANGLES, cur_batch.second.totalBuffered, GL_UNSIGNED_INT, nullptr);
         }
 
         shader->unbind();
