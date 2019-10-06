@@ -4,8 +4,64 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "ecs/components/basic_shapes.h"
 #include "ecs/components/renderable_component.h"
 #include "ecs/components/render_type_components.h"
+
+glm::mat4 get_transform(glm::vec3 position, float deg, glm::vec3 axis, glm::vec3 scale) {
+    return glm::translate(glm::mat4(1), position) * glm::rotate(glm::mat4(1), deg, axis) * glm::scale(glm::mat4(1), scale);
+}
+
+enum SIDES {
+    FRONT = 0,
+    BACK,
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM
+};
+
+inline void append_vertices(VerticesComponent& dest, VerticesComponent& src) {
+    dest.vertices.insert(dest.vertices.end(), src.vertices.begin(), src.vertices.end());
+}
+
+inline void append_indices(IndicesComponent& dest, IndicesComponent& src, int numVerts) {
+    for(auto indice : src.indices) dest.indices.push_back(numVerts + indice);
+}
+
+inline void add_side(VerticesComponent& vDest, IndicesComponent& iDest, const std::string& texture, glm::mat4 xform, int x = 1, int y = 1) {
+    auto side = create_square(texture, xform, x, y);
+    append_indices(iDest, side.indices, vDest.vertices.size());
+    append_vertices(vDest, side.vertices);
+}
+
+inline ECS::Entity* create_cube(ECS::World* world, const std::string& texture, glm::vec3 position, int hiddenSides = 0, glm::vec3 scale = {1, 1, 1} ) {
+    auto entity = world->create();
+
+    VerticesComponent vertices;
+    IndicesComponent indices;
+
+    float xMod=1, yMod=1, zMod=1;
+    if(scale.x > 0) {
+        xMod = scale.x;
+    }if(scale.y > 0) {
+        yMod = scale.y;
+    }if(scale.z > 0) {
+        zMod = scale.z;
+    }
+
+    if(!check_bit(hiddenSides, FRONT)) add_side(vertices, indices, texture, get_transform(position, 0, {0,1,0}, {scale.x, scale.y, 1}), scale.x, scale.y);
+    if(!check_bit(hiddenSides, BACK)) add_side(vertices, indices, texture, get_transform(position + glm::vec3(xMod,0,-zMod), glm::pi<float>(), {0,1,0}, {scale.x, scale.y, 1}), scale.x, scale.y);
+    if(!check_bit(hiddenSides, LEFT)) add_side(vertices, indices, texture, get_transform(position + glm::vec3(0,0,-zMod), -glm::pi<float>()/2.f, {0,1,0}, {scale.z, scale.y, 1}), scale.z, scale.y);
+    if(!check_bit(hiddenSides, RIGHT)) add_side(vertices, indices, texture, get_transform(position + glm::vec3(xMod,0,0), glm::pi<float>()/2.f, {0,1,0}, {scale.z, scale.y, 1}), scale.z, scale.y);
+    if(!check_bit(hiddenSides, TOP)) add_side(vertices, indices, texture, get_transform(position + glm::vec3(0,yMod,0), -glm::pi<float>()/2.f, {1,0,0}, {scale.x, scale.z, 1}), scale.x, scale.z);
+    if(!check_bit(hiddenSides, BOTTOM)) add_side(vertices, indices, texture, get_transform(position + glm::vec3(0,0,-zMod), glm::pi<float>()/2.f, {1,0,0}, {scale.x, scale.z, 1}), scale.x, scale.z);
+
+    entity->assign<VerticesComponent>(vertices);
+    entity->assign<IndicesComponent>(indices);
+
+    return entity;
+}
 
 inline ECS::Entity* create_cube(ECS::World* world, glm::vec3 position, glm::vec2 size = {.25f, .25f}) {
     auto entity = world->create();
@@ -41,3 +97,4 @@ inline ECS::Entity* create_cube(ECS::World* world, glm::vec3 position, glm::vec2
 
     return entity;
 }
+

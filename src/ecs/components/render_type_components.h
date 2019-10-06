@@ -4,6 +4,16 @@
 
 #include "graphics/buffer.h"
 
+namespace {
+    inline void set_bit(int& number, int bit) {
+        number = (number |= 1UL << bit);
+    }
+
+    inline int check_bit(int number, int bit)  {
+        return (number >> bit) & 1UL;
+    }
+}
+
 struct RenderComponent {};
 
 struct BatchRenderComponent {

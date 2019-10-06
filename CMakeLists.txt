@@ -12,12 +12,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BUILD_DIR}/debug)
 project(MagicalEngine)
 
 file(GLOB_RECURSE SRC_FILES
-    src/
     src/*.cpp
 )
 
 file(GLOB_RECURSE HEADER_FILES
-    src/
     src/*.h
     src/*.hpp
 )
@@ -25,7 +23,7 @@ file(GLOB_RECURSE HEADER_FILES
 include_directories(${CMAKE_SOURCE_DIR}/src/)
 include_directories(${CMAKE_SOURCE_DIR}/src/external)
 
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEADER_FILES})
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 if(WIN32)
     set(WINDOW_DEPS ${CMAKE_SOURCE_DIR}/dep/windows)

@@ -6,47 +6,50 @@
 
 #include "ecs/components/renderable_component.h"
 #include "ecs/components/render_type_components.h"
+#include "graphics/textures/texture_manager.h"
 
-inline ECS::Entity* create_triangle(ECS::World* world, glm::vec3 position) {
-    auto entity = world->create();
+struct RawComponents {
+    RawComponents(VerticesComponent v, IndicesComponent i) : vertices(v), indices(i) {}
+    VerticesComponent vertices;
+    IndicesComponent indices;
+};
 
-    VerticesComponent vertices ({
-        {glm::vec3(-.6f, -.4f, -1.f), glm::vec3(1.f, 0.f, 0.f), glm::translate(glm::mat4(1.f), position)},
-        {glm::vec3(.6f, -.4f, -1.f), glm::vec3(0.f, 1.f, 0.f), glm::translate(glm::mat4(1.f), position)},
-        {glm::vec3(.0f, .6f, -1.f), glm::vec3(0.f, 0.f, 1.f), glm::translate(glm::mat4(1.f), position)}
-    });
-    entity->assign<VerticesComponent>(vertices);
-
-    IndicesComponent indices ({
-        {1},
-        {2},
-        {0}
-    });
-    entity->assign<IndicesComponent>(indices);
-    return entity;
+inline RawComponents create_triangle(glm::vec3 position) {
+    return {
+        VerticesComponent({
+            {glm::vec3(-.6, -1, -1), glm::vec3(1, 0, 0), glm::mat4(1.f) * glm::translate(position)},
+            {glm::vec3(.6, -1, -1), glm::vec3(0, 1, 0), glm::mat4(1.f) * glm::translate(position)},
+            {glm::vec3(.0, 0, -1), glm::vec3(0, 0, 1), glm::mat4(1.f) * glm::translate(position)}
+        }),
+        IndicesComponent({
+            {1},
+            {2},
+            {0}
+        })
+    };
 }
 
-inline ECS::Entity* create_square(ECS::World* world, glm::vec3 position, glm::vec2 size = {.25f, .25f}) {
-    auto entity = world->create();
+inline RawComponents create_square(const std::string& texture, glm::mat4 xform, int repeatX = 1, int repeatY = 1) {
+    double textureHandle = -1;
+    if(texture != "") textureHandle = ME::Graphics::TextureManager::instance().load_texture(texture);
+    return {
+        VerticesComponent({
+            {glm::vec3(0,0,0), glm::vec3(1,1,1), glm::vec3(0.f, repeatY, textureHandle), xform},
+            {glm::vec3(1,0,0), glm::vec3(1,1,1), glm::vec3(repeatX, repeatY, textureHandle), xform},
+            {glm::vec3(1,1,0), glm::vec3(1,1,1), glm::vec3(repeatX, 0.f, textureHandle), xform},
+            {glm::vec3(0,1,0), glm::vec3(1,1,1), glm::vec3(0.f, 0.f, textureHandle), xform}
+        }),
+        IndicesComponent({
+            {0},
+            {1},
+            {2},
+            {0},
+            {2},
+            {3}
+        })
+    };
+}
 
-    size *= .5f;
-    VerticesComponent vertices ({
-        {glm::vec3(-size.x, -size.y, -1.f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0,1,0),glm::translate(glm::mat4(1.f), position)},
-        {glm::vec3(size.x, -size.y, -1.f), glm::vec3(0.f, 1.f, 0.f), glm::vec3(1,1,0),glm::translate(glm::mat4(1.f), position)},
-        {glm::vec3(size.x, size.y, -1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(1,0,0),glm::translate(glm::mat4(1.f), position)},
-        {glm::vec3(-size.x, size.y, -1.f), glm::vec3(1.f, 0.f, 1.f), glm::vec3(0,0,0), glm::translate(glm::mat4(1.f), position)}
-    });
-    entity->assign<VerticesComponent>(vertices);
-
-    IndicesComponent indices ({
-        {0},
-        {1},
-        {2},
-        {0},
-        {2},
-        {3}
-    });
-    entity->assign<IndicesComponent>(indices);
-
-    return entity;
+inline RawComponents create_square(const std::string& texture, glm::vec3 position) {
+    return create_square(texture, glm::translate(glm::mat4(1.f), position));
 }

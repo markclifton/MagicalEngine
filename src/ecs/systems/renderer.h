@@ -19,7 +19,7 @@ public:
     void tick(ECS::World* world, float delta) override {
         shader->bind();
         world->each<RenderComponent>([&](ECS::Entity* ent, ECS::ComponentHandle<RenderComponent>) {
-            auto& verts = ent->get<VerticesComponent>().get().verts;
+            auto& verts = ent->get<VerticesComponent>().get().vertices;
             vbo.buffer(sizeof(VertexComponent) * verts.size(), &verts[0]);
 
             auto& indices = ent->get<IndicesComponent>().get().indices;
@@ -44,6 +44,8 @@ public:
             glm::mat4 p, v;
             ME::Camera::Camera3D::instance().GetMatricies(p, v);
             shader->set_uniform("projection", p*v);
+
+            ME::Graphics::TextureManager::instance().bind_all_textures();
 
             glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 

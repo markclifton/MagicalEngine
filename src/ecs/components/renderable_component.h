@@ -17,9 +17,9 @@ struct VertexComponent {
 };
 
 struct VerticesComponent {
-    VerticesComponent(std::vector<VertexComponent> v) : verts(v) {}
+    VerticesComponent(std::vector<VertexComponent> v) : vertices(v) {}
     VerticesComponent() {}
-    std::vector<VertexComponent> verts {};
+    std::vector<VertexComponent> vertices {};
 };
 
 struct IndicesComponent {

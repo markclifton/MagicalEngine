@@ -25,16 +25,21 @@ namespace {
 }
 
 namespace ME { namespace Graphics {
-    ECS::Entity* load_mesh(ECS::World* world, const std::string& path, glm::vec3 position) {
+    ECS::Entity* load_mesh(ECS::World* world, const std::string& path, glm::vec3 position, const std::string& texture = "") {
         std::vector<glm::vec3> normals;
         std::vector<glm::vec3> uv;
         std::vector<VertexComponent> vertices;
+
+        double textureHandle = -1.;
+        if(texture != "") {
+            textureHandle = ME::Graphics::TextureManager::instance().load_texture(texture);
+        }
 
         VerticesComponent verticesComponent;
         IndicesComponent indicesComponent;
         auto entity = world->create();
 
-        std::ifstream ifs(path);
+        std::ifstream ifs("res/models/" + path);
         if(!ifs.is_open()) ME::Log<FATAL>() << "Failed to open model: " + path;
 
         std::string line;
@@ -49,7 +54,7 @@ namespace ME { namespace Graphics {
                 normals.emplace_back(std::stof(ls[1]), std::stof(ls[2]), std::stof(ls[3]));
             }
             else if(ls.size() > 2 && ls.front().compare("vt") == 0) {
-                uv.emplace_back(std::stof(ls[1]), std::stof(ls[2]), 0);
+                uv.emplace_back(std::stof(ls[1]), std::stof(ls[2]), -1);
             }
             else if(ls.size() > 3 && ls.front().compare("f") == 0) {
                 auto vertInfo1 = split(ls[1], '/');
@@ -79,12 +84,16 @@ namespace ME { namespace Graphics {
                 }
 
                 if(vertInfo1.size() > 0) {
-                    verticesComponent.verts.push_back(v1);
-                    vertex1 = static_cast<int>(verticesComponent.verts.size() - 1);
-                    verticesComponent.verts.push_back(v2);
-                    vertex2 = static_cast<int>(verticesComponent.verts.size() - 1);
-                    verticesComponent.verts.push_back(v3);
-                    vertex3 = static_cast<int>(verticesComponent.verts.size() - 1);
+                    v1.uv.z = textureHandle;
+                    v2.uv.z = textureHandle;
+                    v3.uv.z = textureHandle;
+
+                    verticesComponent.vertices.push_back(v1);
+                    vertex1 = static_cast<int>(verticesComponent.vertices.size() - 1);
+                    verticesComponent.vertices.push_back(v2);
+                    vertex2 = static_cast<int>(verticesComponent.vertices.size() - 1);
+                    verticesComponent.vertices.push_back(v3);
+                    vertex3 = static_cast<int>(verticesComponent.vertices.size() - 1);
 
                     indicesComponent.indices.push_back(vertex1);
                     indicesComponent.indices.push_back(vertex2);

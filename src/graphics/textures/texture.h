@@ -13,13 +13,12 @@ namespace ME { namespace Graphics {
         Texture(const std::string& path);
         ~Texture();
 
-        void bind();
-        glm::vec2 get_size();
-
+        inline GLuint get_id() { return m_textureID; }
+        inline glm::vec2 get_size() { return {m_width, m_height}; }
+        
     private:
         GLuint m_textureID {0};
         int m_width {0};
         int m_height {0};
-
     };
 }}

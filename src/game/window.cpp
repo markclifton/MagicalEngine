@@ -62,6 +62,16 @@ namespace ME { namespace Game {
     }
 
     void Window::keyHandler(int key, int scancode, int action, int mods) {
+        if(key == GLFW_KEY_F1 && action == GLFW_PRESS) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else if(key == GLFW_KEY_F2 && action == GLFW_PRESS) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        } else if(key == GLFW_KEY_F3 && action == GLFW_PRESS) {
+            glEnable(GL_CULL_FACE);
+        } else if(key == GLFW_KEY_F4 && action == GLFW_PRESS) {
+            glDisable(GL_CULL_FACE);
+        }
+
         for(auto& handler : m_keyHandlers) {
             handler->process(key, scancode, action, mods);
         }

@@ -51,7 +51,7 @@ public:
             }
 
             auto& transforms = irc.get().transforms;
-            auto& verts = vertComp.get().verts;
+            auto& verts = vertComp.get().vertices;
             auto& indices = indComp.get().indices;
 
             if(irc.get().edited) {

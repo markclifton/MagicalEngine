@@ -1,5 +1,8 @@
 #version 460 core
 
+#extension GL_NV_bindless_texture : require
+#extension GL_NV_gpu_shader5 : require
+
 layout (location = 0) in vec3 vs_position;
 layout (location = 1) in vec3 vs_color;
 layout (location = 2) in vec3 vs_uv;

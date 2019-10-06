@@ -12,7 +12,6 @@ struct BatchEntity {
     ME::Graphics::IndexBuffer ibo;
     ME::Graphics::VertexBuffer vbo;
     uint32_t numVertices {0};
-    uint32_t numIndices {0};
     uint32_t totalBuffered {0};
     bool edited {true};
 };
@@ -63,10 +62,10 @@ public:
                     ECS::Entity* ent, ECS::ComponentHandle<BatchRenderComponent> component, ECS::ComponentHandle<VisibleComponent>, ECS::ComponentHandle<VerticesComponent> verts, ECS::ComponentHandle<IndicesComponent> indices) {
                     if(component.get().batch_id != cur_batch.first) return;
 
-                    cur_batch.second.vbo.buffer_sub_data(sizeof(VertexComponent) * currentVerts , sizeof(VertexComponent) * verts.get().verts.size(), &verts.get().verts[0]);
+                    cur_batch.second.vbo.buffer_sub_data(sizeof(VertexComponent) * currentVerts , sizeof(VertexComponent) * verts.get().vertices.size(), &verts.get().vertices[0]);
 
                     for(auto index : indices.get().indices) finalIndices.push_back(index + currentVerts);
-                    currentVerts += verts.get().verts.size();
+                    currentVerts += verts.get().vertices.size();
                 });
 
                 cur_batch.second.ibo.buffer(sizeof(int32_t) * finalIndices.size(), &finalIndices[0]);
@@ -77,6 +76,8 @@ public:
             glm::mat4 p, v;
             ME::Camera::Camera3D::instance().GetMatricies(p, v);
             shader->set_uniform("projection", p*v);
+
+            ME::Graphics::TextureManager::instance().bind_all_textures();
 
             cur_batch.second.ibo.bind();
             glDrawElements(GL_TRIANGLES, cur_batch.second.totalBuffered, GL_UNSIGNED_INT, nullptr);
