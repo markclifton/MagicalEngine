@@ -50,12 +50,14 @@ inline ECS::Entity* create_cube(ECS::World* world, const std::string& texture, g
         zMod = scale.z;
     }
 
-    if(!check_bit(hiddenSides, FRONT)) add_side(vertices, indices, texture, get_transform(position, 0, {0,1,0}, {scale.x, scale.y, 1}), scale.x, scale.y);
-    if(!check_bit(hiddenSides, BACK)) add_side(vertices, indices, texture, get_transform(position + glm::vec3(xMod,0,-zMod), glm::pi<float>(), {0,1,0}, {scale.x, scale.y, 1}), scale.x, scale.y);
-    if(!check_bit(hiddenSides, LEFT)) add_side(vertices, indices, texture, get_transform(position + glm::vec3(0,0,-zMod), -glm::pi<float>()/2.f, {0,1,0}, {scale.z, scale.y, 1}), scale.z, scale.y);
-    if(!check_bit(hiddenSides, RIGHT)) add_side(vertices, indices, texture, get_transform(position + glm::vec3(xMod,0,0), glm::pi<float>()/2.f, {0,1,0}, {scale.z, scale.y, 1}), scale.z, scale.y);
-    if(!check_bit(hiddenSides, TOP)) add_side(vertices, indices, texture, get_transform(position + glm::vec3(0,yMod,0), -glm::pi<float>()/2.f, {1,0,0}, {scale.x, scale.z, 1}), scale.x, scale.z);
-    if(!check_bit(hiddenSides, BOTTOM)) add_side(vertices, indices, texture, get_transform(position + glm::vec3(0,0,-zMod), glm::pi<float>()/2.f, {1,0,0}, {scale.x, scale.z, 1}), scale.x, scale.z);
+    auto sideTexture = check_bit(hiddenSides, TOP) ? "dirt.jpg" : "grass_side.jpg";
+
+    if(!check_bit(hiddenSides, FRONT)) add_side(vertices, indices, sideTexture, get_transform(position, 0, {0,1,0}, {scale.x, scale.y, 1}), scale.x, scale.y);
+    if(!check_bit(hiddenSides, BACK)) add_side(vertices, indices, sideTexture, get_transform(position + glm::vec3(xMod,0,-zMod), glm::pi<float>(), {0,1,0}, {scale.x, scale.y, 1}), scale.x, scale.y);
+    if(!check_bit(hiddenSides, LEFT)) add_side(vertices, indices, sideTexture, get_transform(position + glm::vec3(0,0,-zMod), -glm::pi<float>()/2.f, {0,1,0}, {scale.z, scale.y, 1}), scale.z, scale.y);
+    if(!check_bit(hiddenSides, RIGHT)) add_side(vertices, indices, sideTexture, get_transform(position + glm::vec3(xMod,0,0), glm::pi<float>()/2.f, {0,1,0}, {scale.z, scale.y, 1}), scale.z, scale.y);
+    if(!check_bit(hiddenSides, TOP)) add_side(vertices, indices, "grass.png", get_transform(position + glm::vec3(0,yMod,0), -glm::pi<float>()/2.f, {1,0,0}, {scale.x, scale.z, 1}), scale.x, scale.z);
+    if(!check_bit(hiddenSides, BOTTOM)) add_side(vertices, indices, "dirt.jpg", get_transform(position + glm::vec3(0,0,-zMod), glm::pi<float>()/2.f, {1,0,0}, {scale.x, scale.z, 1}), scale.x, scale.z);
 
     entity->assign<VerticesComponent>(vertices);
     entity->assign<IndicesComponent>(indices);

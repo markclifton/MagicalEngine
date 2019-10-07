@@ -39,40 +39,13 @@ namespace ME { namespace Game {
 
         batchSystem->get_batch();
         auto chunkSystem = new ChunkSystem(world);
-        chunkSystem->generate_chunk(0, 0);
+        for(int x=0; x<16; x++) for(int z=0; z<16; z++) chunkSystem->generate_chunk(x, z);
 
         batchSystem->m_batches[0].numVertices = 16 * 16 * 16 * 32;
-
-        for(int i=0; i<-1; i+=3) {
-            auto entity = create_cube(world, "dirt_side.jpg", glm::vec3(i,0,1), 0, glm::vec3(16,16,16));
-            entity->assign<BatchRenderComponent>( 0 );
-            entity->assign<VisibleComponent>();
-            
-            //auto entity2 = create_cube(world, "dirt_side.jpg", glm::vec3(i,0,2), 0, glm::vec3(16,1,1));
-            //entity2->assign<BatchRenderComponent>( 0 );
-            //entity2->assign<VisibleComponent>();
-        }
-/*
-        std::vector<Chunk> chunks;
-        int numChunks = 1;
-        int chunkSize = 16;
-        for(int v=0; v<numChunks; v++){ for(int w=0; w<numChunks; w++){
-            chunks.emplace_back(world, chunkSize*v , chunkSize*w);
-            for(float x = 0; x < chunkSize; x+=1){ for(float y = 0; y < chunkSize; y+=1){ for(float z = 0; z < chunkSize; z+=1){
-                auto entity = create_cube(world, "dirt.png", glm::vec3(x-chunkSize*v, y, z-chunkSize*w), 0);
-                entity->assign<BatchRenderComponent>( batchSystem->get_batch() );
-                chunks.back().add_block(entity, x, y, z); //This should improve performance...
-            } } }
-            chunks.back().resolve_visibility();
-        } }
-        batchSystem->m_batches[0].numVertices = chunkSize * chunkSize * chunkSize * 36;
-*/
-        //generate_chunk(world);
 
         ME::Camera::Camera3D::instance().SetViewport(0, 0, 1280, 720);
         m_window->registerHandler(&ME::Camera::Camera3D::instance());
 
-        //glfwSwapInterval(0);
         Timer timer;
         int counter = 0;
 
@@ -85,7 +58,7 @@ namespace ME { namespace Game {
 
             counter++;
             if(timer.get() > 1000){
-                ME::Log<ME::DEBUG>() << "Frame Time: " + std::to_string(std::round(counter / timer.reset() * 1000.));
+                ME::Log<ME::DEBUG>() << "FPS: " + std::to_string(std::round(counter / timer.reset() * 1000.));
                 counter = 0;
             }
         }
@@ -94,9 +67,11 @@ namespace ME { namespace Game {
     void Instance::load() {
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
+        glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glClearColor(.2, .3, .8, 1.f);
+        //glfwSwapInterval(0);
     }
 
     void Instance::update() {
