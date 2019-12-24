@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.14)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -20,6 +20,8 @@ file(GLOB_RECURSE HEADER_FILES
     src/*.hpp
 )
 
+#link_libraries("legacy_stdio_definitions.lib")
+
 include_directories(${CMAKE_SOURCE_DIR}/src/)
 include_directories(${CMAKE_SOURCE_DIR}/src/external)
 
@@ -28,7 +30,7 @@ add_executable(${PROJECT_NAME} ${SRC_FILES})
 if(WIN32)
     set(WINDOW_DEPS ${CMAKE_SOURCE_DIR}/dep/windows)
     include_directories(${WINDOW_DEPS}/glfw-3.3/include)
-    target_link_libraries(${PROJECT_NAME} ${WINDOW_DEPS}/glfw-3.3/lib/libglfw3.a)
+    target_link_libraries(${PROJECT_NAME} ${WINDOW_DEPS}/glfw-3.3/lib/glfw3.lib)
 endif()
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

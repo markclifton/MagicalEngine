@@ -39,5 +39,4 @@ struct InstancedRenderComponent {
     bool edited {true};
 };
 
-struct VisibleComponent {
-};
+struct VisibleComponent {};

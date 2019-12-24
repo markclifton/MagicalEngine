@@ -17,16 +17,17 @@
 //  entity->assign<InstancedComponent>(instancedEntity);
 //  entity->assign<XformComponent>( glm::translate(glm::mat4(1.f), glm::vec3(0, 0, 0)) );
 
+#ifndef OFFSET_MACRO
+#define OFFSET_MACRO
+#define _offsetof(s,m) ((::size_t)&reinterpret_cast<char const volatile&>((((s*)0)->m)))
+#endif
+
 class InstancedRenderSystem : public ECS::EntitySystem {
     std::shared_ptr<ME::Graphics::Shader> shader {ME::Graphics::load_shader("vertex", "fragment")};
-    GLuint m_vao;
 public:
-    InstancedRenderSystem() {
-        glGenVertexArrays(1, &m_vao);
-    }
+    InstancedRenderSystem() {}
 
     void tick(ECS::World* world, float delta) override {
-        glBindVertexArray(m_vao);
         shader->bind();
         
         std::set<ECS::Entity*> completed;
@@ -59,9 +60,9 @@ public:
                 glEnableVertexAttribArray(0);
                 glEnableVertexAttribArray(1);
                 glEnableVertexAttribArray(2);
-                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)offsetof(VertexComponent, VertexComponent::position));
-                glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)offsetof(VertexComponent, VertexComponent::color));
-                glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)offsetof(VertexComponent, VertexComponent::uv));
+                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)_offsetof(VertexComponent, VertexComponent::position));
+                glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)_offsetof(VertexComponent, VertexComponent::color));
+                glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexComponent), (void*)_offsetof(VertexComponent, VertexComponent::uv));
                 vbo->unbind();
                 
                 ibo->buffer(sizeof(int32_t) * indices.size(), &indices[0]);
@@ -105,7 +106,5 @@ public:
             glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, transforms.size());
         });
         shader->unbind();
-
-        glBindVertexArray(0);
     }
 };

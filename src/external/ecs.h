@@ -491,19 +491,16 @@ namespace ECS
 		/**
 		* Register a system. The world will manage the memory of the system unless you unregister the system.
 		*/
-		EntitySystem* registerSystem(EntitySystem* system)
-		{
+		EntitySystem* registerSystem(EntitySystem* system) {
 			systems.push_back(system);
 			system->configure(this);
-
-            		return system;
+            return system;
 		}
 
 		/**
 		* Unregister a system.
 		*/
-		void unregisterSystem(EntitySystem* system)
-		{
+		void unregisterSystem(EntitySystem* system) {
 			systems.erase(std::remove(systems.begin(), systems.end(), system), systems.end());
 			system->unconfigure(this);
 		}

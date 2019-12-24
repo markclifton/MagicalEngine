@@ -11,9 +11,10 @@ namespace ME { namespace Graphics {
     template <typename EnumClass, EnumClass EnumVal>
     class BufferImpl {
     public:
-        BufferImpl(int type) : m_type(type) {
+        BufferImpl(int type) : m_type(type), m_created(true) {
             glGenBuffers(1, &m_buffer);
-            if(m_buffer == 0) Log<ME::FATAL>() << "Failed to allocate buffer";
+            if(m_buffer == 0) 
+                Log<ME::FATAL>() << "Failed to allocate buffer";
         }
 
         ~BufferImpl() {
@@ -21,6 +22,10 @@ namespace ME { namespace Graphics {
         }
 
         void bind() {
+			if (!m_created) {
+				glGenBuffers(1, &m_buffer);
+				m_created = true;
+			}
             glBindBuffer(m_type, m_buffer);
         }
 
@@ -38,10 +43,18 @@ namespace ME { namespace Graphics {
             glBufferSubData(m_type, offset, size, data);
         }
 
+		void release() {
+			if (m_created) {
+				m_created = false;
+				glDeleteBuffers(1, &m_buffer);
+			}
+		}
+
     private:
         GLuint m_buffer;
         int m_type;
         int m_drawType;
+		bool m_created;
     };
 
     class VertexBuffer : public BufferImpl<decltype(BUFFER::VBO), VBO> {

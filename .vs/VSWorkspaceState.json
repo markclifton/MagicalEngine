@@ -1,7 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src"
+    "\\src",
+    "\\src\\ecs\\systems",
+    "\\src\\external",
+    "\\src\\external\\entt",
+    "\\src\\game"
   ],
+  "SelectedNode": "\\src\\external\\entt\\entt.hpp",
   "PreviewInSolutionExplorer": false
 }

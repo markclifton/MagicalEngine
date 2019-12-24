@@ -20,15 +20,13 @@ namespace ME { namespace Graphics {
     }
 
     uint64_t load_texture(const std::string& file) {
-        if(m_textures.size() > 1000) Log<FATAL>() << "Exceeded max textures";
+        if(m_textures.size() > MAX_TEXTURES) Log<FATAL>() << "Exceeded max textures";
 
         if(m_textures.find(file) == m_textures.end()) {
             m_textures.emplace(file, "res/textures/" + file);
         }
 
-        //TODO: Fix this.
-        auto& texture = m_textures.find(file)->second;
-        unsigned int texId = texture.get_id();
+        unsigned int texId = m_textures.find(file)->second.get_id();
         if(m_handleMap.find(texId) == m_handleMap.end()) {
             uint64_t nextHandle = m_textures.size() - 1;
             m_handleMap[texId] = nextHandle;
@@ -40,8 +38,6 @@ namespace ME { namespace Graphics {
     }
 
     void bind_all_textures() {
-        unsigned int container;
-        glGenBuffers(1, &container); 
         glBindBuffer(GL_UNIFORM_BUFFER, container);
         glBufferData(GL_UNIFORM_BUFFER, m_textures.size() * sizeof(uint64_t), NULL, GL_STATIC_DRAW);
         glBindBufferRange(GL_UNIFORM_BUFFER, 0, container, 0, m_textures.size() * sizeof(uint64_t));
@@ -50,10 +46,14 @@ namespace ME { namespace Graphics {
 
     private:        
         TextureManager() {
+            glGenBuffers(1, &container); 
+
             for(int i=0; i<MAX_TEXTURES; ++i) {
                 m_handles[i] = 0;
             }
         }
+
+        unsigned int container = 0;
 
         std::map<std::string, ME::Graphics::Texture> m_textures;
         std::map<uint64_t, uint64_t> m_handleMap;

@@ -22,9 +22,9 @@ inline RawComponents create_triangle(glm::vec3 position) {
             {glm::vec3(.0, 0, -1), glm::vec3(0, 0, 1), glm::mat4(1.f) * glm::translate(position)}
         }),
         IndicesComponent({
-            {1},
-            {2},
-            {0}
+            1,
+            2,
+            0
         })
     };
 }
@@ -40,12 +40,12 @@ inline RawComponents create_square(const std::string& texture, glm::mat4 xform, 
             {glm::vec3(0,1,0), glm::vec3(1,1,1), glm::vec3(0.f, 0.f, textureHandle), xform}
         }),
         IndicesComponent({
-            {0},
-            {1},
-            {2},
-            {0},
-            {2},
-            {3}
+            0,
+            1,
+            2,
+            0,
+            2,
+            3
         })
     };
 }

@@ -50,7 +50,19 @@ namespace ME { namespace Camera {
         }
         inline void setPitch(float radians) { auto old = m_cameraPitch; ChangePitch(radians); Update(true); m_cameraPitch = old; }
         inline void setHeading(float radians) { auto old = m_cameraHeading; ChangeHeading(radians); Update(true); m_cameraHeading = old; }
-    private:
+
+        bool in_view(glm::vec3 point) {            
+            glm::vec3 c = m_cameraDirection; c.y=0;
+            glm::vec3 d = point-m_cameraPosition; d.y=0;
+            glm::vec3 da=glm::normalize(c);
+            glm::vec3 db=glm::normalize(d);
+
+            glm::vec2 pointXZ = {point.x, point.z};
+            glm::vec2 cameraXZ = {m_cameraPosition.x, m_cameraPosition.z};
+
+			return (glm::acos(glm::dot(da, db)) < 3 * glm::pi<float>() / 2.f && glm::distance(point, m_cameraPosition) <= 6 * 16); // || glm::distance(pointXZ, cameraXZ) <= 4 * 16;
+        }
+
         int m_viewportX;
         int m_viewportY;
         int m_windowWidth;
